@@ -1,6 +1,6 @@
 <template>
     <header
-        class="sticky top-0 z-50 w-full bg-white/70 backdrop-blur-lg border-b border-slate-200/60 shadow-lg shadow-black/[0.03]">
+        class="sticky top-0 z-50 w-full bg-white/70 backdrop-blur-md border-b border-slate-200/60 shadow-lg shadow-black/[0.03]">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16 sm:h-20">
                 <!-- Logo -->
@@ -12,7 +12,8 @@
 
                     <!-- Logo Text -->
                     <h1
-                        class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                        style="font-family: 'Noto-sans';"
+                        class="text-xl font-semibold sm:text-2xl bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                         SiangLao
                     </h1>
                 </NuxtLink>
@@ -27,7 +28,7 @@
                 </nav>
 
                 <!-- Mobile Menu Button -->
-                <button @click="toggleMobileDrawer"
+                <button @click="emit('open-drawer')"
                     class="md:hidden p-2 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-slate-100/50 transition-colors duration-200"
                     aria-label="Open mobile menu">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,29 +39,19 @@
             </div>
         </div>
 
-        <!-- Mobile Drawer -->
-        <MobileDrawer :is-open="isMobileDrawerOpen" @close="closeMobileDrawer" />
+        <!-- Mobile Drawer removed from here -->
     </header>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+// import { ref } from 'vue' // No longer need ref here for drawer state
 import logo from '~/assets/images/sianglao-logo.png'
-import MobileDrawer from '~/components/layout/MobileDrawer.vue'
+// import MobileDrawer from '~/components/layout/MobileDrawer.vue' // No longer import MobileDrawer here
 
 const { navigation } = useContentStore()
+const emit = defineEmits(['open-drawer']) // Define emit
 
-// Mobile drawer state
-const isMobileDrawerOpen = ref(false)
-
-const toggleMobileDrawer = () => {
-    isMobileDrawerOpen.value = !isMobileDrawerOpen.value
-    console.log('hello')
-}
-
-const closeMobileDrawer = () => {
-    isMobileDrawerOpen.value = false
-}
+// Mobile drawer state and methods removed from here
 
 // Route mapping helper
 const getRouteByKey = (key) => {

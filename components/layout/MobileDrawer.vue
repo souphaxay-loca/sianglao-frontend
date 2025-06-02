@@ -3,7 +3,9 @@
   <Transition enter-active-class="transition-opacity duration-300" enter-from-class="opacity-0"
     enter-to-class="opacity-100" leave-active-class="transition-opacity duration-300" leave-from-class="opacity-100"
     leave-to-class="opacity-0">
-    <div v-if="isOpen" class="fixed inset-0 z-[998] bg-black/20 backdrop-blur-sm" @click="emit('close')" />
+    <div v-if="isOpen" class="fixed inset-0 z-[998] bg-black/30 backdrop-blur-sm"
+      style="position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;"
+      @click="emit('close')" />
   </Transition>
 
   <!-- Drawer -->
@@ -11,9 +13,10 @@
     enter-to-class="translate-x-0" leave-active-class="transition-transform duration-300 ease-in"
     leave-from-class="translate-x-0" leave-to-class="translate-x-full">
     <div v-if="isOpen"
-      class="fixed top-0 right-0 z-[999] h-screen w-80 max-w-[80vw] bg-white/90 backdrop-blur-lg border-l border-slate-200/60 shadow-2xl flex flex-col">
+      class="w-80 max-w-[80vw] bg-white/95 backdrop-blur-lg border-l border-slate-200/60 shadow-2xl flex flex-col z-[999]"
+      style="position: fixed !important; top: 0 !important; right: 0 !important; height: 100vh !important; max-height: 100vh !important;">
       <!-- Drawer Header -->
-      <div class="flex items-center justify-between p-6 border-b border-slate-200/60 bg-white/50 flex-shrink-0">
+      <div class="flex items-center justify-between p-6 border-b border-slate-200/60 bg-white/80 flex-shrink-0">
         <h3 class="text-lg font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
           SiangLao
         </h3>
@@ -27,7 +30,7 @@
       </div>
 
       <!-- Navigation Links -->
-      <nav class="flex flex-col p-6 space-y-2 flex-1">
+      <nav class="flex flex-col p-6 space-y-2 flex-1 bg-white/5">
         <NuxtLink v-for="(label, key) in navigation" :key="key" :to="getRouteByKey(key)" @click="emit('close')"
           class="flex items-center gap-4 px-4 py-4 rounded-xl text-slate-700 hover:text-blue-600 hover:bg-blue-50/30 transition-all duration-200 font-medium"
           active-class="!text-blue-600 !bg-blue-100/60 !font-semibold">
@@ -38,7 +41,7 @@
       </nav>
 
       <!-- Drawer Footer -->
-      <div class="p-6 border-t border-slate-200/60 bg-white/50 flex-shrink-0">
+      <div class="p-6 border-t border-slate-200/60 bg-white/80 flex-shrink-0">
         <div class="text-center">
           <p class="text-sm text-slate-400">Version 1.0.0</p>
         </div>
@@ -99,12 +102,10 @@ watch(() => props.isOpen, (isOpen) => {
     document.addEventListener('keydown', handleKeydown)
     // Prevent body scroll
     document.body.style.overflow = 'hidden'
-    document.documentElement.style.overflow = 'hidden'
   } else {
     document.removeEventListener('keydown', handleKeydown)
     // Restore body scroll
     document.body.style.overflow = ''
-    document.documentElement.style.overflow = ''
   }
 })
 
@@ -113,6 +114,5 @@ onUnmounted(() => {
   document.removeEventListener('keydown', handleKeydown)
   // Restore scroll on unmount
   document.body.style.overflow = ''
-  document.documentElement.style.overflow = ''
 })
 </script>
