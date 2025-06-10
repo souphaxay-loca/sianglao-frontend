@@ -71,8 +71,7 @@
         <div
             class="bg-white/40 backdrop-blur-lg rounded-xl border border-slate-200/40 shadow-lg overflow-hidden mb-6 opacity-60 pointer-events-none">
             <!-- Header with Time and Confidence -->
-            <div
-                class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 border-b border-slate-200/60 bg-white/50 gap-2">
+            <div class="flex justify-between items-center p-4 border-b border-slate-200/60 bg-white/50 gap-2">
                 <div class="flex items-center gap-2 text-sm text-slate-600">
                     <Icon name="mdi:clock-outline" class="w-4 h-4" />
                     <span>{{ transcriptionContent.timeRecorded }}</span>

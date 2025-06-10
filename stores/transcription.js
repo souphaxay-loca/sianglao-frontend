@@ -25,7 +25,7 @@ export const useTranscriptionStore = defineStore("transcription", {
     uploadProgress: 0,
 
     // API Integration
-    currentRequestId: null, // NEW: Backend request ID
+    currentRequestId: null,
     processingStartTime: null,
 
     // Error handling
@@ -35,6 +35,7 @@ export const useTranscriptionStore = defineStore("transcription", {
 
     // Processing
     processingProgress: 0,
+    processingStatus: null,
   }),
 
   getters: {
@@ -69,9 +70,9 @@ export const useTranscriptionStore = defineStore("transcription", {
 
     // Processing estimates
     processingTimeEstimate: (state) => {
-      if (!state.processingStartTime) return "2-3 ນາທີ";
+      if (!state.processingStartTime) return "15 ວິນາທີ - 1 ນາທີ";
       const elapsed = Date.now() - state.processingStartTime;
-      return elapsed > 30000 ? "ເກືອບສຳເລັດແລ້ວ..." : "2-3 ນາທີ";
+      return elapsed > 30000 ? "ເກືອບສຳເລັດແລ້ວ..." : "3-5 ນາທີ";
     },
   },
 
@@ -252,7 +253,7 @@ export const useTranscriptionStore = defineStore("transcription", {
       this.audioUrl = url;
     },
 
-    // NEW: Backend API integration
+    
     async uploadFileToAPI(file) {
       try {
         this.currentState = "processing";
@@ -262,15 +263,18 @@ export const useTranscriptionStore = defineStore("transcription", {
         const formData = new FormData();
         formData.append("audio", file);
 
-        const uploadResponse = await $fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
+        const uploadResponse = await $fetch(
+          "http://localhost:5005/api/upload",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
 
         this.currentRequestId = uploadResponse.requestId;
 
         // Step 2: Start transcription
-        await $fetch(`/api/transcribe/${this.currentRequestId}`, {
+        await $fetch(`http://localhost:5005/api/transcribe/${this.currentRequestId}`, {
           method: "POST",
         });
 
@@ -287,13 +291,15 @@ export const useTranscriptionStore = defineStore("transcription", {
       const checkStatus = async () => {
         try {
           const statusResponse = await $fetch(
-            `http://localhost:5000/api/status/${this.currentRequestId}`
+            `http://localhost:5005/api/status/${this.currentRequestId}`
           );
+
+          this.processingStatus = statusResponse.status;
 
           if (statusResponse.status === "completed") {
             // Get final results
             const resultResponse = await $fetch(
-              `http://localhost:5000/api/result/${this.currentRequestId}`
+              `http://localhost:5005/api/result/${this.currentRequestId}`
             );
 
             this.transcriptionText = resultResponse.transcription.laoText;
@@ -303,12 +309,12 @@ export const useTranscriptionStore = defineStore("transcription", {
             this.currentState = "results";
 
             // Cleanup backend files
-            await $fetch(
-              `http://localhost:5000/api/cleanup/${this.currentRequestId}`,
-              {
-                method: "DELETE",
-              }
-            );
+            // await $fetch(
+            //   `http://localhost:5000/api/cleanup/${this.currentRequestId}`,
+            //   {
+            //     method: "DELETE",
+            //   }
+            // );
           } else if (statusResponse.status === "processing") {
             // Continue polling every 2 seconds
             setTimeout(checkStatus, 2000);
@@ -412,9 +418,10 @@ export const useTranscriptionStore = defineStore("transcription", {
       const validTypes = [
         "audio/wav",
         "audio/mp3",
-        "audio/mpeg",
+        // "audio/mpeg",
         "audio/m4a",
         "audio/x-m4a",
+        "audio/webm",
       ];
       const maxSize = 10 * 1024 * 1024; // 10MB (matching your backend)
 
