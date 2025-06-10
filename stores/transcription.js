@@ -244,6 +244,14 @@ export const useTranscriptionStore = defineStore("transcription", {
         URL.revokeObjectURL(this.audioUrl);
       }
       this.audioUrl = URL.createObjectURL(file);
+
+      const tempAudio = new Audio();
+      tempAudio.src = this.audioUrl;
+      tempAudio.addEventListener("loadedmetadata", () => {
+        this.duration = tempAudio.duration;
+        console.log("File duration set:", this.duration);
+      });
+      tempAudio.load();
     },
 
     setAudioUrl(url) {
@@ -253,9 +261,12 @@ export const useTranscriptionStore = defineStore("transcription", {
       this.audioUrl = url;
     },
 
-    
     async uploadFileToAPI(file) {
       try {
+        // const preservedAudioUrl = this.audioUrl;
+        const preservedDuration = this.duration;
+        const preservedUploadedFile = this.uploadedFile;
+
         this.currentState = "processing";
         this.processingStartTime = Date.now();
 
@@ -273,10 +284,20 @@ export const useTranscriptionStore = defineStore("transcription", {
 
         this.currentRequestId = uploadResponse.requestId;
 
+        // this.audioUrl = preservedAudioUrl;
+        this.duration = preservedDuration;
+        this.uploadedFile = preservedUploadedFile;
+
         // Step 2: Start transcription
-        await $fetch(`http://localhost:5005/api/transcribe/${this.currentRequestId}`, {
-          method: "POST",
-        });
+        await $fetch(
+          `http://localhost:5005/api/transcribe/${this.currentRequestId}`,
+          {
+            method: "POST",
+          }
+        );
+
+        // RESTORE the audioUrl after state change
+        // this.audioUrl = currentAudioUrl;
 
         // Step 3: Start polling for results
         this.pollForResults();
@@ -301,6 +322,8 @@ export const useTranscriptionStore = defineStore("transcription", {
             const resultResponse = await $fetch(
               `http://localhost:5005/api/result/${this.currentRequestId}`
             );
+
+            // console.log('resultResponse', resultResponse);
 
             this.transcriptionText = resultResponse.transcription.laoText;
             this.confidence = Math.round(
