@@ -24,7 +24,7 @@ export const useContentStore = defineStore('content', {
       
       // Transcription interface content
       transcription: {
-        timeRecorded: "ເວລາທີ່ບັນທຶກ:",
+        timeRecorded: "ເວລາບັນທຶກ:",
         aiConfidence: "ຄວາມຊັດເຈນ:",
         placeholderText: "ລໍຖ້າການບັນທຶກສຽງ ຫຼື ການອັບໂຫຼດຟາຍ.",
         copyButton: "ກັອບປີ້ຂໍ້ຄວາມ",

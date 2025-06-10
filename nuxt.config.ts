@@ -21,4 +21,13 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  // Add proxy configuration for development
+  // nitro: {
+  //   devProxy: {
+  //     '/api': {
+  //       target: 'http://localhost:5000',
+  //       changeOrigin: true
+  //     }
+  //   }
+  // }
 })

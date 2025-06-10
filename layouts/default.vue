@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col bg-page-gradient">
     <AppHeader @open-drawer="openMobileDrawer" />
-    <main class="flex-1 py-12 sm:py-16">
+    <main class="flex-1 py-12 sm:py-16 px-4 sm:px-6  lg:px-8">
       <slot />
     </main>
     <AppFooter />

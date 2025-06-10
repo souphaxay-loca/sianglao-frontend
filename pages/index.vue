@@ -1,9 +1,9 @@
 <template>
     <div>
-        <InitialState />
+        <TranscriptionInterface />
     </div>
 </template>
 
 <script setup>
-import InitialState from '~/components/transcription/InitialState.vue'
+import TranscriptionInterface from '~/components/transcription/TranscriptionInterface.vue'
 </script>
