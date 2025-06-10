@@ -16,17 +16,17 @@ export const useContentStore = defineStore('content', {
       // Initial state content (will be used in InitialState component)
       initialState: {
         title: "Convert Lao Speech to Text",
-        subtitle: "ກູດລວມການບັນທຶກສຽງພາສາລາວເປັນຂໍ້ຄວາມດ້ວຍເທັກໂນໂລຊີ AI ທີ່ກ້າວໜ້າ ກົດປຸ່ມໄມໂຄຣໂຟນເພື່ອເລີ່ມຕົ້ນ ຫຼື ອັບໂຫຼດໄຟລ໌ບັນທຶກສຽງທີ່ມີຢູ່ແລ້ວ.",
+        subtitle: "ຖອດຂໍ້ຄວາມຈາກສຽງບັນທຶກພາສາລາວເປັນຕົວໜັງສືໄດ້ຢ່າງຖືກຕ້ອງຊັດເຈນ ດ້ວຍເຕັກໂນໂລຊີປັນຍາປະດິດ (AI) ທີ່ກ້າວໜ້າຂອງພວກເຮົາ. ",
         recordButton: "ເລີ່ມບັນທຶກ",
-        uploadButton: "ອັບໂຫຼດໄຟລ໌",
-        uploadText: "ຫຼື ລາກແລະວາງ"
+        uploadButton: "ອັບໂຫຼດ",
+        uploadText: "ຫຼື ລາກຟາຍສຽງມາໃສ່ບ່ອນນີ້"
       },
       
       // Transcription interface content
       transcription: {
         timeRecorded: "ເວລາທີ່ບັນທຶກ:",
-        aiConfidence: "ຄວາມເຊື່ອໝັ້ນຂອງ AI:",
-        placeholderText: "ສັງກາການບັນທຶກສຽງ ຫຼື ການອັບໂຫຼດໄຟລ໌...\n\n(Your transcribed text will appear here after recording or upload.)",
+        aiConfidence: "ຄວາມຊັດເຈນ:",
+        placeholderText: "ລໍຖ້າການບັນທຶກສຽງ ຫຼື ການອັບໂຫຼດຟາຍ.",
         copyButton: "ກັອບປີ້ຂໍ້ຄວາມ",
         downloadButton: "ດາວໂຫຼດ",
         processingText: "ກຳລັງດຳເນີນການ...",

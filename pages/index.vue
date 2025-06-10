@@ -1,39 +1,9 @@
 <template>
     <div>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        <h1 class="text-2xl font-bold ">home</h1>
-        
+        <InitialState />
     </div>
 </template>
 
 <script setup>
-
+import InitialState from '~/components/transcription/InitialState.vue'
 </script>
