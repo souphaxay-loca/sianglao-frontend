@@ -19,7 +19,7 @@ export const useTranscriptionStore = defineStore("transcription", {
     isRecording: false,
     mediaRecorder: null,
     recordingTimer: null,
-    recordingCancelled: false, // NEW: Track if recording was cancelled
+    recordingCancelled: false, 
 
     // Upload state
     uploadProgress: 0,
@@ -30,12 +30,15 @@ export const useTranscriptionStore = defineStore("transcription", {
 
     // Error handling
     error: null,
-    errorType: null, // 'validation', 'processing', 'network'
+    errorType: null, 
     errorMessage: "",
 
     // Processing
     processingProgress: 0,
     processingStatus: null,
+
+    // Error
+    errorContext: null,
   }),
 
   getters: {
@@ -70,9 +73,10 @@ export const useTranscriptionStore = defineStore("transcription", {
 
     // Processing estimates
     processingTimeEstimate: (state) => {
-      if (!state.processingStartTime) return "15 ວິນາທີ - 1 ນາທີ";
-      const elapsed = Date.now() - state.processingStartTime;
-      return elapsed > 30000 ? "ເກືອບສຳເລັດແລ້ວ..." : "3-5 ນາທີ";
+      // if (!state.processingStartTime) return "15 ວິນາທີ - 1 ນາທີ";
+      // const elapsed = Date.now() - state.processingStartTime;
+      // return elapsed > 30000 ? "ເກືອບສຳເລັດແລ້ວ..." : "3-5 ນາທີ";
+      return "5 ວິນາທີ - 1 ນາທີ"
     },
   },
 
@@ -174,7 +178,7 @@ export const useTranscriptionStore = defineStore("transcription", {
       this.audioUrl = URL.createObjectURL(audioBlob);
     },
 
-    // NEW: Stop recording method
+    // Stop recording method
     async stopRecording() {
       try {
         // Stop the MediaRecorder if it exists
@@ -199,7 +203,7 @@ export const useTranscriptionStore = defineStore("transcription", {
       }
     },
 
-    // NEW: Cancel recording method
+    // Cancel recording method
     cancelRecording() {
       try {
         console.log(
@@ -233,7 +237,7 @@ export const useTranscriptionStore = defineStore("transcription", {
       }
     },
 
-    // NEW: File upload methods
+    // File upload methods
     setUploadedFile(file, fileInfo) {
       this.uploadedFile = file;
       this.fileInfo = fileInfo;
@@ -307,7 +311,7 @@ export const useTranscriptionStore = defineStore("transcription", {
       }
     },
 
-    // NEW: Status polling
+    // Status polling
     async pollForResults() {
       const checkStatus = async () => {
         try {
@@ -361,7 +365,7 @@ export const useTranscriptionStore = defineStore("transcription", {
     completeUpload(file) {
       this.currentState = "upload-complete";
       this.uploadedFile = file;
-      this.duration = 0; // Will be calculated from file
+      this.duration = 0;
       this.clearErrors();
     },
 
@@ -466,6 +470,23 @@ export const useTranscriptionStore = defineStore("transcription", {
       }
 
       return true;
+    },
+
+    // Update setValidationError method:
+    setValidationError(message, fileInfo = null) {
+      this.currentState = "validation-error";
+      this.errorType = "validation";
+      this.errorMessage = message;
+      this.errorContext = fileInfo; 
+    },
+
+    // For testing - add to transcription store actions
+    testValidationError() {
+      this.setValidationError("Test validation error", {
+        name: "invalid_video.mp4",
+        size: 15728640, // 15MB
+        type: "video/mp4",
+      });
     },
   },
 });

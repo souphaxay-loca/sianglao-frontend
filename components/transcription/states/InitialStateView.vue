@@ -10,7 +10,7 @@
                 {{ initialContent.subtitle }}
             </p>
             <p class="text-slate-900 text-xs sm:text-base mt-2 font-medium">
-                {{ initialContent.recordButton }} {{ initialContent.uploadText }}
+                {{ initialContent.keyMessage }}
             </p>
         </div>
 
@@ -70,7 +70,7 @@
         <!-- Transcription Display Container -->
         <div class="bg-white/40 backdrop-blur-lg rounded-xl border border-slate-200/40 shadow-lg overflow-hidden mb-6">
             <!-- Header with Time and Confidence -->
-            <div class=" flex justify-between items-center p-4 border-b border-slate-200/60 bg-white/50 gap-2">
+            <div class=" flex justify-between items-center p-3 border-b border-slate-200/60 bg-white/50 gap-2">
                 <div class="flex items-center gap-2 text-sm text-slate-600">
                     <Icon name="mdi:clock-outline" class="w-4 h-4" />
                     <span>{{ transcriptionContent.timeRecorded }}</span>
@@ -82,7 +82,7 @@
                     <Icon name="mdi:brain" class="w-4 h-4" />
                     <span>{{ transcriptionContent.aiConfidence }}</span>
                     <span
-                        class="px-2 py-1 bg-emerald-50 text-emerald-600 rounded-md font-medium border border-emerald-200/60">
+                        class="px-2 py-1 bg-blue-50 text-blue-600 rounded-md font-medium border border-blue-200/60">
                         {{ confidence || '--' }}%
                     </span>
                 </div>
@@ -97,15 +97,15 @@
         </div>
 
         <!-- Action Buttons -->
-        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <button @click="copyToClipboard" :disabled="!transcribedText"
-                class="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-slate-300 disabled:to-slate-400 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-lg disabled:shadow-none min-w-36">
+                class="w-[160px] flex items-center justify-center gap-2 px-2 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-slate-300 disabled:to-slate-400 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-lg disabled:shadow-none">
                 <Icon name="mdi:content-copy" class="w-5 h-5" />
                 <span>{{ transcriptionContent.copyButton }}</span>
             </button>
 
             <button @click="downloadTranscription" :disabled="!transcribedText"
-                class="flex items-center justify-center gap-2 px-6 py-3 bg-slate-100/70 hover:bg-slate-200/70 disabled:bg-slate-100/50 text-slate-700 disabled:text-slate-400 rounded-xl font-medium transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 focus:outline-none focus:ring-2 focus:ring-slate-500/20 border border-slate-200/60 min-w-36">
+                class="w-[160px] flex items-center justify-center gap-2 px-2 py-2.5 bg-slate-100/70 hover:bg-slate-200/70 disabled:bg-slate-100/50 text-slate-700 disabled:text-slate-400 rounded-xl font-medium transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 focus:outline-none focus:ring-2 focus:ring-slate-500/20 border border-slate-200/60">
                 <Icon name="mdi:download" class="w-5 h-5" />
                 <span>{{ transcriptionContent.downloadButton }}</span>
             </button>
@@ -152,18 +152,18 @@ const startRecording = () => {
 const beginRecording = async () => {
     try {
         // Request microphone permission
-        const stream = await navigator.mediaDevices.getUserMedia({ 
+        const stream = await navigator.mediaDevices.getUserMedia({
             audio: {
                 sampleRate: 16000,  // Match your backend expectation
                 channelCount: 1,    // Mono audio
                 echoCancellation: true,
                 noiseSuppression: true
-            } 
+            }
         })
-        
+
         // Start recording with the stream
         await transcriptionStore.startRecordingWithStream(stream)
-        
+
     } catch (error) {
         console.error('Failed to access microphone:', error)
         alert('ບໍ່ສາມາດເຂົ້າເຖິງໄມໂຄຣໂຟນໄດ້. ກະລຸນາອະນຸຍາດການເຂົ້າເຖິງໄມໂຄຣໂຟນ.')
@@ -181,17 +181,6 @@ const stopRecording = () => {
     setTimeout(() => {
         processAudio()
     }, 1000)
-}
-
-const processAudio = () => {
-    transcriptionStore.startProcessing()
-
-    // Mock transcription processing
-    setTimeout(() => {
-        const mockTranscription = 'ສະບາຍດີຄັບ ຂ້ອຍຊື່ວິໄລ ຂ້ອຍເປັນນັກສຶກສາວິທະຍາສາດຄອມພິວເຕີ ຂ້ອຍກຳລັງພັດທະນາລະບົບຖອດລະຫັດສຽງພາສາລາວ ເພື່ອໃຊ້ໃນວິທະຍານິພົນຂອງຂ້ອຍ...'
-        const mockConfidence = 94
-        transcriptionStore.setResults(mockTranscription, mockConfidence)
-    }, 3000)
 }
 
 // File upload functionality
@@ -254,9 +243,15 @@ const handleDrop = (e) => {
 
 // File processing that integrates with your existing flow
 const processFile = (file) => {
-    // Use your existing store validation
     if (!transcriptionStore.validateFile(file)) {
-        return // Store will handle setting error state
+        // Pass file info to error state
+        const fileInfo = {
+            name: file.name,
+            size: file.size,
+            type: file.type
+        }
+        transcriptionStore.setValidationError("Invalid file format", fileInfo)
+        return
     }
 
     const fileInfo = {
@@ -294,8 +289,6 @@ const copyToClipboard = async () => {
 
     try {
         await navigator.clipboard.writeText(transcribedText.value)
-        console.log('Text copied to clipboard')
-        // TODO: Show success notification
     } catch (err) {
         console.error('Failed to copy text:', err)
     }

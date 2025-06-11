@@ -23,7 +23,7 @@
                     ກຳລັງປະມວນຜົນສຽງ
                 </div>
                 <div class="text-slate-600 text-sm">
-                    ແບບຈຳລອງ AI ກຳລັງເຮັດວຽກ... {{ processingStatus }}
+                    ແບບຈຳລອງ AI ກຳລັງເຮັດວຽກ... 
                 </div>
             </div>
 
@@ -49,7 +49,7 @@
                     <Icon name="mdi:brain" class="w-4 h-4" />
                     <span>{{ transcriptionContent.aiConfidence }}</span>
                     <span
-                        class="px-2 py-1 bg-emerald-50 text-emerald-600 rounded-md font-medium border border-emerald-200/60">
+                        class="px-2 py-1 bg-blue-50 text-blue-600 rounded-md font-medium border border-blue-200/60">
                         --%
                     </span>
                 </div>
@@ -64,15 +64,15 @@
         </div>
 
         <!-- Action Buttons (Disabled) -->
-        <div class="flex flex-col sm:flex-row gap-3 justify-center opacity-40 pointer-events-none">
+        <div class="flex flex-col sm:flex-row gap-3 justify-center items-center opacity-40 pointer-events-none">
             <button
-                class="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-medium min-w-36">
+                class="w-[160px] flex items-center justify-center gap-2 px-2 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-medium">
                 <Icon name="mdi:content-copy" class="w-5 h-5" />
                 <span>{{ transcriptionContent.copyButton }}</span>
             </button>
 
             <button
-                class="flex items-center justify-center gap-2 px-6 py-3 bg-slate-100/70 text-slate-700 rounded-xl font-medium border border-slate-200/60 min-w-36">
+                class="w-[160px] flex items-center justify-center gap-2 px-2 py-2.5 bg-slate-100/70 text-slate-700 rounded-xl font-medium border border-slate-200/60">
                 <Icon name="mdi:download" class="w-5 h-5" />
                 <span>{{ transcriptionContent.downloadButton }}</span>
             </button>

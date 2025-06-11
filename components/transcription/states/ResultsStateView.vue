@@ -69,8 +69,7 @@
                 <div class="flex items-center gap-2 text-sm text-slate-600">
                     <Icon name="mdi:brain" class="w-4 h-4" />
                     <span>{{ transcriptionContent.aiConfidence }}</span>
-                    <span
-                        class="px-2 py-1 bg-emerald-50 text-emerald-600 rounded-md font-medium border border-emerald-200/60">
+                    <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded-md font-medium border border-blue-200/60">
                         {{ confidence || 94 }}%
                     </span>
                 </div>
@@ -95,16 +94,16 @@
         </div>
 
         <!-- Action Buttons -->
-        <div class="flex flex-col sm:flex-row gap-3 justify-center mb-8">
+        <div class="flex flex-col sm:flex-row gap-3 justify-center items-center mb-8">
             <button @click="copyToClipboard"
-                class="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-lg min-w-36"
+                class="w-[160px] flex items-center justify-center gap-2 px-2 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-lg"
                 :class="{ 'from-green-500 to-green-600': copySuccess }">
                 <Icon :name="copySuccess ? 'mdi:check' : 'mdi:content-copy'" class="w-5 h-5" />
                 <span>{{ copySuccess ? 'Copied!' : transcriptionContent.copyButton }}</span>
             </button>
 
             <button @click="downloadTranscription"
-                class="flex items-center justify-center gap-2 px-6 py-3 bg-[#E2E8F0]/70 hover:bg-gray-300/80 text-black rounded-xl font-medium transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500/20 shadow-lg min-w-36">
+                class="w-[160px] flex items-center justify-center gap-2 px-2 py-2.5 bg-[#E2E8F0]/70 hover:bg-gray-300/80 text-black rounded-xl font-medium transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500/20 shadow-lg">
                 <Icon name="mdi:download" class="w-5 h-5" />
                 <span>{{ transcriptionContent.downloadButton }}</span>
             </button>
@@ -290,35 +289,35 @@ onMounted(() => {
     // console.log('=== ResultsStateView Debug ===')
     // console.log('Store audioUrl:', transcriptionStore.audioUrl)
     // console.log('Store uploadedFile:', transcriptionStore.uploadedFile?.name)
-    const freshUrl = URL.createObjectURL(transcriptionStore.uploadedFile);
-    transcriptionStore.setAudioUrl(freshUrl);
+    // const freshUrl = URL.createObjectURL(transcriptionStore.uploadedFile);
+    // transcriptionStore.setAudioUrl(freshUrl);
 
-    // if (transcriptionStore.uploadedFile && !transcriptionStore.audioUrl) {
-    //     console.log('🔧 Creating fresh blob URL from uploadedFile');
-    //     const freshUrl = URL.createObjectURL(transcriptionStore.uploadedFile);
-    //     transcriptionStore.setAudioUrl(freshUrl);
-    // }
+    if (transcriptionStore.uploadedFile && !transcriptionStore.audioUrl) {
+        console.log('🔧 Creating fresh blob URL from uploadedFile');
+        const freshUrl = URL.createObjectURL(transcriptionStore.uploadedFile);
+        transcriptionStore.setAudioUrl(freshUrl);
+    }
 
-    // if (transcriptionStore.audioUrl) {
-    //     const testAudio = new Audio();
-    //     testAudio.src = transcriptionStore.audioUrl;
-    //     testAudio.addEventListener('error', () => {
-    //         console.log('❌ Current blob URL is invalid, creating fresh one');
-    //         if (transcriptionStore.uploadedFile) {
-    //             const freshUrl = URL.createObjectURL(transcriptionStore.uploadedFile);
-    //             transcriptionStore.setAudioUrl(freshUrl);
-    //         }
-    //     });
-    //     testAudio.load();
-    // }
+    if (transcriptionStore.audioUrl) {
+        const testAudio = new Audio();
+        testAudio.src = transcriptionStore.audioUrl;
+        testAudio.addEventListener('error', () => {
+            console.log('❌ Current blob URL is invalid, creating fresh one');
+            if (transcriptionStore.uploadedFile) {
+                const freshUrl = URL.createObjectURL(transcriptionStore.uploadedFile);
+                transcriptionStore.setAudioUrl(freshUrl);
+            }
+        });
+        testAudio.load();
+    }
 
     // Ensure we have audio URL
-    // if (!audioUrl.value && (transcriptionStore.audioBlob || transcriptionStore.uploadedFile)) {
-    //     // Create object URL if we have audio data but no URL
-    //     const audioSource = transcriptionStore.audioBlob || transcriptionStore.uploadedFile
-    //     const url = URL.createObjectURL(audioSource)
-    //     transcriptionStore.setAudioUrl(url)
-    // }
+    if (!audioUrl.value && (transcriptionStore.audioBlob || transcriptionStore.uploadedFile)) {
+        // Create object URL if we have audio data but no URL
+        const audioSource = transcriptionStore.audioBlob || transcriptionStore.uploadedFile
+        const url = URL.createObjectURL(audioSource)
+        transcriptionStore.setAudioUrl(url)
+    }
 
     // Fallback: use total duration as audio duration if audio doesn't load
     setTimeout(() => {
