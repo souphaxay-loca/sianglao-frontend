@@ -1,39 +1,59 @@
 <template>
     <header
-        class="sticky top-0 z-50 w-full bg-white/70 backdrop-blur-md border-b border-slate-200/60 shadow-lg shadow-black/[0.03]">
+        class="sticky top-0 z-50 w-full bg-white/70 backdrop-blur-md border-b border-slate-200/60 shadow-lg shadow-black/[0.03]"
+    >
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16 sm:h-20">
                 <!-- Logo -->
                 <NuxtLink to="/" class="flex items-center gap-3">
-                    <!-- Logo Icon Placeholder -->
+                    <!-- Logo Icon  -->
                     <div class="w-16 h-[60px] flex items-center justify-center">
-                        <img :src="logo" alt="SiangLao Logo" class="w-full h-full object-contain">
+                        <img
+                            :src="logo"
+                            alt="SiangLao Logo"
+                            class="w-full h-full object-contain"
+                        />
                     </div>
 
                     <!-- Logo Text -->
                     <h1
-                        style="font-family: 'Noto-sans';"
-                        class="text-xl font-semibold sm:text-2xl bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                        class="text-xl font-bold sm:text-2xl bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
+                    >
                         SiangLao
                     </h1>
                 </NuxtLink>
 
                 <!-- Desktop Navigation -->
                 <nav class="hidden md:flex items-center gap-8">
-                    <NuxtLink v-for="(label, key) in navigation" :key="key" :to="getRouteByKey(key)"
+                    <NuxtLink
+                        v-for="(label, key) in navigation"
+                        :key="key"
+                        :to="getRouteByKey(key)"
                         class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors duration-200 relative nav-link"
-                        active-class="!text-blue-600 !font-semibold nav-link-active">
+                        active-class="!text-blue-600 !font-semibold nav-link-active"
+                    >
                         {{ label }}
                     </NuxtLink>
                 </nav>
 
                 <!-- Mobile Menu Button -->
-                <button @click="emit('open-drawer')"
+                <button
+                    @click="emit('open-drawer')"
                     class="md:hidden p-2 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-slate-100/50 transition-colors duration-200"
-                    aria-label="Open mobile menu">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
+                    aria-label="Open mobile menu"
+                >
+                    <svg
+                        class="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"
+                        />
                     </svg>
                 </button>
             </div>
@@ -45,29 +65,29 @@
 
 <script setup>
 // import { ref } from 'vue' // No longer need ref here for drawer state
-import logo from '~/assets/images/sianglao-logo.png'
+import logo from "~/assets/images/sianglao-logo.png";
 // import MobileDrawer from '~/components/layout/MobileDrawer.vue' // No longer import MobileDrawer here
 
-const { navigation } = useContentStore()
-const emit = defineEmits(['open-drawer']) // Define emit
+const { navigation } = useContentStore();
+const emit = defineEmits(["open-drawer"]); // Define emit
 
 // Mobile drawer state and methods removed from here
 
 // Route mapping helper
 const getRouteByKey = (key) => {
     const routes = {
-        main: '/',
-        about: '/about',
-        contact: '/contact'
-    }
-    return routes[key] || '/'
-}
+        main: "/",
+        about: "/about",
+        contact: "/contact",
+    };
+    return routes[key] || "/";
+};
 </script>
 
 <style scoped>
 /* Active navigation link styling */
 .nav-link-active::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -0.5rem;
     left: 0;

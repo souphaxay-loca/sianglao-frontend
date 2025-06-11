@@ -1,20 +1,21 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-05-15',
-  devtools: { enabled: true },
+  compatibilityDate: "2025-05-15",
+  devtools: { enabled: false },
   app: {
     head: {
-      title: 'SiangLao - Lao Speech to Text',
+      title: "SiangLao - Lao Speech to Text",
       meta: [
         {
-          name: 'description',
-          content: 'Convert Lao speech to text with advanced AI technology. Accurate transcription for Lao language audio recordings.'
-        }
-      ]
+          name: "description",
+          content:
+            "Convert Lao speech to text with advanced AI technology. Accurate transcription for Lao language audio recordings.",
+        },
+      ],
     },
   },
-  css: ['~/assets/css/main.css'],
-  modules: ['@nuxt/fonts', '@nuxt/icon', '@pinia/nuxt'],
+  css: ["~/assets/css/main.css"],
+  modules: ["@nuxt/fonts", "@nuxt/icon", "@pinia/nuxt"],
   postcss: {
     plugins: {
       tailwindcss: {},
@@ -30,4 +31,4 @@ export default defineNuxtConfig({
   //     }
   //   }
   // }
-})
+});
