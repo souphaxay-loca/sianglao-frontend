@@ -267,7 +267,8 @@ export const useTranscriptionStore = defineStore("transcription", {
 
     async uploadFileToAPI(file) {
       try {
-        // const preservedAudioUrl = this.audioUrl;
+        const { transcriptionApi } = await import('~/services/api.js')
+        
         const preservedDuration = this.duration;
         const preservedUploadedFile = this.uploadedFile;
 
@@ -275,33 +276,14 @@ export const useTranscriptionStore = defineStore("transcription", {
         this.processingStartTime = Date.now();
 
         // Step 1: Upload file
-        const formData = new FormData();
-        formData.append("audio", file);
-
-        const uploadResponse = await $fetch(
-          "http://localhost:5005/api/upload",
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-
+        const uploadResponse = await transcriptionApi.uploadFile(file);
         this.currentRequestId = uploadResponse.requestId;
 
-        // this.audioUrl = preservedAudioUrl;
         this.duration = preservedDuration;
         this.uploadedFile = preservedUploadedFile;
 
         // Step 2: Start transcription
-        await $fetch(
-          `http://localhost:5005/api/transcribe/${this.currentRequestId}`,
-          {
-            method: "POST",
-          }
-        );
-
-        // RESTORE the audioUrl after state change
-        // this.audioUrl = currentAudioUrl;
+        await transcriptionApi.startTranscription(this.currentRequestId);
 
         // Step 3: Start polling for results
         this.pollForResults();
@@ -313,35 +295,22 @@ export const useTranscriptionStore = defineStore("transcription", {
 
     // Status polling
     async pollForResults() {
+      const { transcriptionApi } = await import('~/services/api.js')
+      
       const checkStatus = async () => {
         try {
-          const statusResponse = await $fetch(
-            `http://localhost:5005/api/status/${this.currentRequestId}`
-          );
-
+          const statusResponse = await transcriptionApi.checkStatus(this.currentRequestId);
           this.processingStatus = statusResponse.status;
 
           if (statusResponse.status === "completed") {
             // Get final results
-            const resultResponse = await $fetch(
-              `http://localhost:5005/api/result/${this.currentRequestId}`
-            );
-
-            // console.log('resultResponse', resultResponse);
+            const resultResponse = await transcriptionApi.getResult(this.currentRequestId);
 
             this.transcriptionText = resultResponse.transcription.laoText;
             this.confidence = Math.round(
               resultResponse.transcription.overallConfidence * 100
             );
             this.currentState = "results";
-
-            // Cleanup backend files
-            // await $fetch(
-            //   `http://localhost:5000/api/cleanup/${this.currentRequestId}`,
-            //   {
-            //     method: "DELETE",
-            //   }
-            // );
           } else if (statusResponse.status === "processing") {
             // Continue polling every 2 seconds
             setTimeout(checkStatus, 2000);
