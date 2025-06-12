@@ -11,32 +11,38 @@
         <ProcessingStateView v-if="currentState === 'processing'" />
         <ResultsStateView v-if="currentState === 'results'" />
         <ValidationErrorStateView v-if="currentState === 'validation-error'" />
-        <!-- <ErrorStateView v-if="currentState === 'error'" /> -->
+        <ProcessingErrorStateView v-if="currentState === 'processing-error'" />
     </div>
 </template>
 
 <script setup>
-import { computed, watch } from 'vue'
+import { computed, watch } from "vue";
 
-import InitialStateView from './states/InitialStateView.vue'
-import RecordingStateView from './states/RecordingStateView.vue'
-import RecordingCompleteView from './states/RecordingCompleteView.vue'
-import UploadCompleteView from './states/UploadCompleteView.vue'
-import ProcessingStateView from './states/ProcessingStateView.vue'
-import ResultsStateView from './states/ResultsStateView.vue'
-import ValidationErrorStateView from './states/ValidationErrorStateView.vue'
+import InitialStateView from "./states/InitialStateView.vue";
+import RecordingStateView from "./states/RecordingStateView.vue";
+import RecordingCompleteView from "./states/RecordingCompleteView.vue";
+import UploadCompleteView from "./states/UploadCompleteView.vue";
+import ProcessingStateView from "./states/ProcessingStateView.vue";
+import ResultsStateView from "./states/ResultsStateView.vue";
+import ValidationErrorStateView from "./states/ValidationErrorStateView.vue";
+import ProcessingErrorStateView from "./states/ProcessingErrorStateView.vue";
 // import ErrorStateView from './states/ErrorStateView.vue'
 
 // Store integration
-const transcriptionStore = useTranscriptionStore()
-const currentState = computed(() => transcriptionStore.currentState)
+const transcriptionStore = useTranscriptionStore();
+const currentState = computed(() => transcriptionStore.currentState);
 
 // Debug: Watch state changes
-watch(currentState, (newState, oldState) => {
-    console.log(`State changed from "${oldState}" to "${newState}"`)
-}, { immediate: true })
+watch(
+    currentState,
+    (newState, oldState) => {
+        console.log(`State changed from "${oldState}" to "${newState}"`);
+    },
+    { immediate: true },
+);
 
-onMounted(() => {
-    // transcriptionStore.testValidationError()
-})
+// onMounted(() => {
+//     // transcriptionStore.testValidationError()
+//     transcriptionStore.testProcessingError();
+// });
 </script>

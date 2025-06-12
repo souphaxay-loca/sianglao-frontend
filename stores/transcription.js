@@ -19,7 +19,7 @@ export const useTranscriptionStore = defineStore("transcription", {
     isRecording: false,
     mediaRecorder: null,
     recordingTimer: null,
-    recordingCancelled: false, 
+    recordingCancelled: false,
 
     // Upload state
     uploadProgress: 0,
@@ -30,7 +30,7 @@ export const useTranscriptionStore = defineStore("transcription", {
 
     // Error handling
     error: null,
-    errorType: null, 
+    errorType: null,
     errorMessage: "",
 
     // Processing
@@ -76,7 +76,7 @@ export const useTranscriptionStore = defineStore("transcription", {
       // if (!state.processingStartTime) return "15 ວິນາທີ - 1 ນາທີ";
       // const elapsed = Date.now() - state.processingStartTime;
       // return elapsed > 30000 ? "ເກືອບສຳເລັດແລ້ວ..." : "3-5 ນາທີ";
-      return "5 ວິນາທີ - 1 ນາທີ"
+      return "5 ວິນາທີ - 1 ນາທີ";
     },
   },
 
@@ -95,7 +95,7 @@ export const useTranscriptionStore = defineStore("transcription", {
 
       console.log(
         "resetToInitial() completed - state after:",
-        this.currentState
+        this.currentState,
       );
     },
 
@@ -118,7 +118,7 @@ export const useTranscriptionStore = defineStore("transcription", {
       }, 1000);
     },
 
-    // NEW: Clear recording timer method
+    // Clear recording timer method
     clearRecordingTimer() {
       if (this.recordingTimer) {
         clearInterval(this.recordingTimer);
@@ -193,10 +193,10 @@ export const useTranscriptionStore = defineStore("transcription", {
 
         // Note: The actual audio blob will be handled by MediaRecorder's ondataavailable event
         // For now, we'll create a mock blob
-        const mockAudioBlob = new Blob(["mock audio data"], {
-          type: "audio/wav",
-        });
-        this.completeRecording(mockAudioBlob);
+        // const mockAudioBlob = new Blob(["mock audio data"], {
+        //   type: "audio/wav",
+        // });
+        // this.completeRecording(mockAudioBlob);
       } catch (error) {
         console.error("Error stopping recording:", error);
         this.setProcessingError("Failed to stop recording");
@@ -208,7 +208,7 @@ export const useTranscriptionStore = defineStore("transcription", {
       try {
         console.log(
           "Store cancelRecording() called - state before:",
-          this.currentState
+          this.currentState,
         );
 
         // Set the cancelled flag before stopping MediaRecorder
@@ -228,7 +228,7 @@ export const useTranscriptionStore = defineStore("transcription", {
           this.resetToInitial();
           console.log(
             "Store cancelRecording() completed - state after:",
-            this.currentState
+            this.currentState,
           );
         }, 100); // Small delay to ensure onstop has processed
       } catch (error) {
@@ -267,13 +267,14 @@ export const useTranscriptionStore = defineStore("transcription", {
 
     async uploadFileToAPI(file) {
       try {
-        const { transcriptionApi } = await import('~/services/api.js')
-        
+        const { transcriptionApi } = await import("~/services/api.js");
+
         const preservedDuration = this.duration;
         const preservedUploadedFile = this.uploadedFile;
 
         this.currentState = "processing";
         this.processingStartTime = Date.now();
+        this.clearErrors();
 
         // Step 1: Upload file
         const uploadResponse = await transcriptionApi.uploadFile(file);
@@ -295,20 +296,24 @@ export const useTranscriptionStore = defineStore("transcription", {
 
     // Status polling
     async pollForResults() {
-      const { transcriptionApi } = await import('~/services/api.js')
-      
+      const { transcriptionApi } = await import("~/services/api.js");
+
       const checkStatus = async () => {
         try {
-          const statusResponse = await transcriptionApi.checkStatus(this.currentRequestId);
+          const statusResponse = await transcriptionApi.checkStatus(
+            this.currentRequestId,
+          );
           this.processingStatus = statusResponse.status;
 
           if (statusResponse.status === "completed") {
             // Get final results
-            const resultResponse = await transcriptionApi.getResult(this.currentRequestId);
+            const resultResponse = await transcriptionApi.getResult(
+              this.currentRequestId,
+            );
 
             this.transcriptionText = resultResponse.transcription.laoText;
             this.confidence = Math.round(
-              resultResponse.transcription.overallConfidence * 100
+              resultResponse.transcription.overallConfidence * 100,
             );
             this.currentState = "results";
           } else if (statusResponse.status === "processing") {
@@ -316,13 +321,13 @@ export const useTranscriptionStore = defineStore("transcription", {
             setTimeout(checkStatus, 2000);
           } else if (statusResponse.status === "failed") {
             this.setProcessingError(
-              statusResponse.message || "Transcription failed"
+              statusResponse.message || "Transcription failed",
             );
           }
         } catch (error) {
           console.error("Status check failed:", error);
           this.setProcessingError(
-            "Connection error. Please check your network."
+            "Connection error. Please check your network.",
           );
         }
       };
@@ -349,19 +354,6 @@ export const useTranscriptionStore = defineStore("transcription", {
       this.currentState = "results";
       this.transcriptionText = transcriptionText;
       this.confidence = confidence;
-      this.processingStartTime = null;
-    },
-
-    setValidationError(message) {
-      this.currentState = "validation-error";
-      this.errorType = "validation";
-      this.errorMessage = message;
-    },
-
-    setProcessingError(message) {
-      this.currentState = "processing-error";
-      this.errorType = "processing";
-      this.errorMessage = message;
       this.processingStartTime = null;
     },
 
@@ -426,14 +418,14 @@ export const useTranscriptionStore = defineStore("transcription", {
         !file.name.toLowerCase().match(/\.(wav|mp3|m4a)$/)
       ) {
         this.setValidationError(
-          "ຮູບແບບໄຟລ໌ບໍ່ຖືກຕ້ອງ. ກະລຸນາໃຊ້ .wav, .mp3 ຫຼື .m4a"
+          "ຮູບແບບໄຟລ໌ບໍ່ຖືກຕ້ອງ. ກະລຸນາໃຊ້ .wav, .mp3 ຫຼື .m4a",
         );
         return false;
       }
 
       if (file.size > maxSize) {
         this.setValidationError(
-          "ໄຟລ໌ໃຫຍ່ເກີນໄປ. ກະລຸນາໃຊ້ໄຟລ໌ທີ່ມີຂະໜາດນ້ອຍກວ່າ 10MB"
+          "ໄຟລ໌ໃຫຍ່ເກີນໄປ. ກະລຸນາໃຊ້ໄຟລ໌ທີ່ມີຂະໜາດນ້ອຍກວ່າ 10MB",
         );
         return false;
       }
@@ -446,7 +438,32 @@ export const useTranscriptionStore = defineStore("transcription", {
       this.currentState = "validation-error";
       this.errorType = "validation";
       this.errorMessage = message;
-      this.errorContext = fileInfo; 
+      this.errorContext = fileInfo;
+    },
+
+    setProcessingError(message) {
+      this.currentState = "processing-error";
+      this.errorType = "processing";
+      this.errorMessage = message;
+      this.processingStartTime = null;
+      // Keep audioUrl, uploadedFile, duration for audio playback
+    },
+
+    async retryTranscription() {
+      const fileToRetry =
+        this.uploadedFile ||
+        (this.audioBlob
+          ? new File([this.audioBlob], "recording.webm", {
+              type: "audio/webm",
+            })
+          : null);
+
+      if (fileToRetry) {
+        await this.uploadFileToAPI(fileToRetry);
+      } else {
+        console.error("Retry failed: No audio data available.");
+        this.setProcessingError("Could not find the original audio to retry.");
+      }
     },
 
     // For testing - add to transcription store actions
@@ -456,6 +473,18 @@ export const useTranscriptionStore = defineStore("transcription", {
         size: 15728640, // 15MB
         type: "video/mp4",
       });
+    },
+    testProcessingError() {
+      // First set up a valid file scenario
+      const mockFile = new File(["mock audio"], "test_audio.wav", {
+        type: "audio/wav",
+      });
+      this.uploadedFile = mockFile;
+      this.audioUrl = URL.createObjectURL(mockFile);
+      this.duration = 125; // 2:05
+
+      // Then trigger processing error
+      this.setProcessingError("Test processing error");
     },
   },
 });
