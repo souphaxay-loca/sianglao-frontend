@@ -64,9 +64,9 @@
 </template>
 
 <script setup>
-// import { ref } from 'vue' // No longer need ref here for drawer state
+
 import logo from "~/assets/images/sianglao-logo.png";
-// import MobileDrawer from '~/components/layout/MobileDrawer.vue' // No longer import MobileDrawer here
+
 
 const { navigation } = useContentStore();
 const emit = defineEmits(["open-drawer"]); // Define emit
