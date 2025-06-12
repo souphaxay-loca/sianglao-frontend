@@ -41,7 +41,7 @@
                         <Icon name="mdi:cloud-upload" class="w-8 h-8 text-blue-600" />
                     </div>
                     <p class="text-blue-600 font-medium text-lg">ປ່ອຍຟາຍທີ່ນີ້ເພື່ອອັບໂຫຼດ</p>
-                    <p class="text-blue-500 text-sm mt-1">ຮັບຮອງຟາຍສຽງ .wav, .mp3, .m4a</p>
+                    <p class="text-blue-500 text-sm mt-1">ຮັບຮອງຟາຍສຽງ .wav, .mp3, .webm</p>
                 </div>
                 <!-- Upload Button -->
                 <div v-else>
@@ -61,7 +61,7 @@
                         <p class="text-slate-400 text-xs mt-1">ຮັບຮອງ .wav, .mp3, .m4a (ສູງສຸດ 50MB)</p>
                     </div> -->
                     <!-- File Input (Hidden) -->
-                    <input ref="fileInput" type="file" accept=".wav,.mp3,.m4a,audio/*" @change="handleFileUpload"
+                    <input ref="fileInput" type="file" accept=".wav,.mp3,.webm,audio/wav,audio/mp3,audio/mpeg,audio/webm" @change="handleFileUpload"
                         class="hidden" />
                 </div>
             </div>
@@ -233,7 +233,7 @@ const handleDrop = (e) => {
 
     // Validate file type before processing
     if (!isValidAudioFile(file)) {
-        console.error('Invalid file type. Please upload .wav, .mp3, or .m4a files.')
+        console.error('Invalid file type. Please upload .wav, .mp3, or .webm files.')
         // You could add a toast notification here
         return
     }
@@ -269,12 +269,10 @@ const isValidAudioFile = (file) => {
         'audio/wav',
         'audio/mp3',
         'audio/mpeg',
-        'audio/m4a',
-        'audio/x-m4a',
-        'audio/ogg'
+        'audio/webm'
     ]
     return validTypes.includes(file.type) ||
-        file.name.toLowerCase().match(/\.(wav|mp3|m4a|ogg)$/)
+        file.name.toLowerCase().match(/\.(wav|mp3|webm)$/)
 }
 
 // Utility functions

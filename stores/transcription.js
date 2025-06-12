@@ -406,19 +406,17 @@ export const useTranscriptionStore = defineStore("transcription", {
       const validTypes = [
         "audio/wav",
         "audio/mp3",
-        // "audio/mpeg",
-        "audio/m4a",
-        "audio/x-m4a",
+        "audio/mpeg",
         "audio/webm",
       ];
       const maxSize = 10 * 1024 * 1024; // 10MB (matching your backend)
 
       if (
         !validTypes.includes(file.type) &&
-        !file.name.toLowerCase().match(/\.(wav|mp3|m4a)$/)
+        !file.name.toLowerCase().match(/\.(wav|mp3|webm)$/)
       ) {
         this.setValidationError(
-          "ຮູບແບບໄຟລ໌ບໍ່ຖືກຕ້ອງ. ກະລຸນາໃຊ້ .wav, .mp3 ຫຼື .m4a",
+          "ຮູບແບບຟາຍບໍ່ຖືກຕ້ອງ. ກະລຸນາໃຊ້ .wav .mp3 .webm",
         );
         return false;
       }
